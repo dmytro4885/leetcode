@@ -1,0 +1,40 @@
+#include <unordered_map>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+class FreqStack {
+    unordered_map<int, int> freqMap;
+    vector<stack<int>> freqStacks;
+public:
+    FreqStack() {}
+    
+    void push(int val) {
+        int freq = ++freqMap[val];
+        if (freq > freqStacks.size()) {
+            freqStacks.push_back(stack<int>());
+        }
+        freqStacks[freq - 1].push(val);
+    }
+    
+    int pop() {
+        int maxFreq = freqStacks.size();
+        int val = freqStacks[maxFreq - 1].top();
+        freqStacks[maxFreq - 1].pop();
+        if (freqStacks[maxFreq - 1].empty()) {
+            freqStacks.pop_back();
+        }
+        freqMap[val]--;
+        if (freqMap[val] == 0) {
+            freqMap.erase(val);
+        }
+        return val;
+    }
+};
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * FreqStack* obj = new FreqStack();
+ * obj->push(val);
+ * int param_2 = obj->pop();
+ */
